@@ -43,7 +43,7 @@ const initialForm: FormData = {
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
-    <p className="text-[10px] tracking-[0.25em] uppercase text-[#C9A96E] font-medium mb-6">
+    <p className="text-xs tracking-[0.2em] uppercase text-[#A0845C] font-semibold mb-5">
       {children}
     </p>
   );
@@ -63,15 +63,15 @@ function Question({
   children: React.ReactNode;
 }) {
   return (
-    <div className="bg-white px-6 py-6 mb-2">
-      <div className="flex gap-4 mb-4">
-        <span className="text-[11px] tracking-[0.15em] text-[#C9A96E] font-medium mt-0.5 shrink-0">{number}</span>
+    <div className="bg-white rounded-lg px-6 py-7 mb-3 shadow-sm">
+      <div className="flex gap-4 mb-5">
+        <span className="text-xs tracking-widest text-[#A0845C] font-bold mt-1 shrink-0">{number}</span>
         <div>
-          <p className="text-sm font-medium text-gray-900 leading-snug">
+          <p className="text-base font-semibold text-gray-900 leading-snug">
             {label}
-            {!required && <span className="text-gray-400 font-normal ml-1">(opcional)</span>}
+            {!required && <span className="text-gray-400 font-normal text-sm ml-1">(opcional)</span>}
           </p>
-          {hint && <p className="text-xs text-gray-400 mt-1 leading-relaxed">{hint}</p>}
+          {hint && <p className="text-sm text-gray-500 mt-1.5 leading-relaxed">{hint}</p>}
         </div>
       </div>
       <div className="pl-8">{children}</div>
@@ -94,19 +94,25 @@ function OptionButton({
     <button
       type="button"
       onClick={onClick}
-      className={`text-left px-4 py-3 text-sm transition-all border ${
+      className={`text-left px-4 py-3.5 text-sm font-medium transition-all rounded-md border-2 ${
         fullWidth ? "w-full" : ""
       } ${
         selected
-          ? "border-[#C9A96E] text-gray-900 bg-[#fdf8f0]"
-          : "border-gray-200 text-gray-500 hover:border-gray-400 hover:text-gray-700"
+          ? "border-[#A0845C] text-gray-900 bg-[#fdf6ed]"
+          : "border-gray-200 text-gray-600 bg-gray-50 hover:border-gray-400 hover:text-gray-900"
       }`}
     >
       <span
-        className={`inline-block w-3 h-3 border mr-3 shrink-0 align-middle transition-colors ${
-          selected ? "border-[#C9A96E] bg-[#C9A96E]" : "border-gray-300"
+        className={`inline-flex items-center justify-center w-4 h-4 rounded-sm border-2 mr-3 shrink-0 align-middle transition-colors ${
+          selected ? "border-[#A0845C] bg-[#A0845C]" : "border-gray-300 bg-white"
         }`}
-      />
+      >
+        {selected && (
+          <svg className="w-2.5 h-2.5 text-white" fill="none" viewBox="0 0 10 8">
+            <path d="M1 4l3 3 5-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        )}
+      </span>
       {children}
     </button>
   );
@@ -116,10 +122,12 @@ function TextInput({
   value,
   onChange,
   placeholder,
+  autoFocus,
 }: {
   value: string;
   onChange: (v: string) => void;
   placeholder?: string;
+  autoFocus?: boolean;
 }) {
   return (
     <input
@@ -127,7 +135,8 @@ function TextInput({
       value={value}
       onChange={(e) => onChange(e.target.value)}
       placeholder={placeholder}
-      className="w-full border-b border-gray-300 focus:border-[#C9A96E] px-0 py-2 text-sm text-gray-900 placeholder-gray-300 outline-none transition-colors bg-transparent"
+      autoFocus={autoFocus}
+      className="w-full border-2 border-gray-200 focus:border-[#A0845C] rounded-md px-4 py-3 text-base text-gray-900 placeholder-gray-400 outline-none transition-colors bg-white"
     />
   );
 }
@@ -149,7 +158,7 @@ function TextArea({
       onChange={(e) => onChange(e.target.value)}
       placeholder={placeholder}
       rows={rows}
-      className="w-full border-b border-gray-300 focus:border-[#C9A96E] px-0 py-2 text-sm text-gray-900 placeholder-gray-300 outline-none transition-colors bg-transparent resize-none"
+      className="w-full border-2 border-gray-200 focus:border-[#A0845C] rounded-md px-4 py-3 text-base text-gray-900 placeholder-gray-400 outline-none transition-colors bg-white resize-none"
     />
   );
 }
@@ -216,13 +225,12 @@ export default function Home() {
   if (submitted) {
     return (
       <main className="min-h-screen bg-[#F5F2EE] flex items-center justify-center px-6">
-        <div className="max-w-md w-full">
-          <SectionLabel>Diagnóstico · Escola Técnica Stela</SectionLabel>
-          <h2 className="text-3xl font-light text-gray-900 mb-4 leading-tight">
-            Obrigada,<br />
-            <span className="text-[#C9A96E]">{form.nome.split(" ")[0]}.</span>
+        <div className="max-w-md w-full bg-white rounded-xl p-10 shadow-sm text-center">
+          <div className="text-4xl mb-5">✅</div>
+          <h2 className="text-2xl font-bold text-gray-900 mb-3">
+            Obrigada, {form.nome.split(" ")[0]}!
           </h2>
-          <p className="text-sm text-gray-400 leading-relaxed">
+          <p className="text-base text-gray-600 leading-relaxed">
             Suas respostas foram registradas. Em breve entraremos em contato com o próximo passo.
           </p>
         </div>
@@ -233,29 +241,31 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-[#F5F2EE]">
       {/* Header */}
-      <header className="border-b border-[#E8E3DB] px-8 py-5">
-        <span className="text-[11px] tracking-[0.3em] uppercase text-gray-900 font-medium">Idens</span>
+      <header className="border-b border-[#E5E0D8] bg-white px-8 py-4">
+        <span className="text-sm tracking-[0.25em] uppercase text-gray-800 font-semibold">Idens</span>
       </header>
 
-      <div className="max-w-2xl mx-auto px-6 py-16">
+      <div className="max-w-2xl mx-auto px-4 py-12">
         {/* Hero */}
-        <SectionLabel>Pré-diagnóstico · Escola Técnica Stela</SectionLabel>
-        <h1 className="text-4xl font-light text-gray-900 leading-tight mb-4">
-          O que você<br />
-          <span className="text-[#C9A96E]">precisa resolver.</span>
-        </h1>
-        <p className="text-sm text-gray-400 leading-relaxed mb-16 max-w-sm">
-          Leva menos de 5 minutos. Suas respostas vão nos ajudar a montar um programa personalizado para a sua área.
-        </p>
+        <div className="mb-10">
+          <SectionLabel>Pré-diagnóstico · Escola Técnica Stela</SectionLabel>
+          <h1 className="text-3xl font-bold text-gray-900 leading-tight mb-3">
+            O que você precisa<br />
+            <span className="text-[#A0845C]">resolver.</span>
+          </h1>
+          <p className="text-base text-gray-600 leading-relaxed max-w-sm">
+            Leva menos de 5 minutos. Suas respostas vão nos ajudar a montar um programa personalizado para a sua área.
+          </p>
+        </div>
 
-        <form onSubmit={handleSubmit} className="space-y-0">
+        <form onSubmit={handleSubmit}>
 
           {/* Nome */}
           <Question number="01" label="Qual é o seu nome completo?">
             <TextInput
               value={form.nome}
               onChange={(v) => setForm({ ...form, nome: v })}
-              placeholder="Seu nome"
+              placeholder="Seu nome completo"
             />
           </Question>
 
@@ -273,18 +283,19 @@ export default function Home() {
               ))}
             </div>
             {form.area === "Outro" && (
-              <div className="mt-4">
+              <div className="mt-3">
                 <TextInput
                   value={form.areaOutro}
                   onChange={(v) => setForm({ ...form, areaOutro: v })}
                   placeholder="Qual área?"
+                  autoFocus
                 />
               </div>
             )}
           </Question>
 
           {/* Nível */}
-          <Question number="03" label="Como você descreveria seu uso atual de IA?">
+          <Question number="03" label="Como você descreveria seu uso atual de Inteligência Artificial?">
             <div className="space-y-2">
               {niveis.map((n) => (
                 <OptionButton
@@ -303,7 +314,7 @@ export default function Home() {
           <Question
             number="04"
             label="Quais ferramentas de IA você já usou?"
-            hint="Pode marcar mais de uma."
+            hint="Pode marcar mais de uma opção."
           >
             <div className="grid grid-cols-2 gap-2">
               {ferramentas.map((f) => (
@@ -317,11 +328,12 @@ export default function Home() {
               ))}
             </div>
             {form.ferramentasUsadas.includes("Outra") && (
-              <div className="mt-4">
+              <div className="mt-3">
                 <TextInput
                   value={form.ferramentaOutra}
                   onChange={(v) => setForm({ ...form, ferramentaOutra: v })}
                   placeholder="Qual ferramenta?"
+                  autoFocus
                 />
               </div>
             )}
@@ -331,7 +343,7 @@ export default function Home() {
           <Question
             number="05"
             label="Descreva brevemente sua rotina principal no trabalho."
-            hint={`Ex: "Gero relatórios de matrícula toda segunda, atendo leads pelo WhatsApp e atualizo planilhas de metas."`}
+            hint='Ex: "Gero relatórios toda segunda, atendo leads pelo WhatsApp e atualizo planilhas de metas."'
           >
             <TextArea
               value={form.rotina}
@@ -343,7 +355,7 @@ export default function Home() {
           {/* Tarefa manual */}
           <Question
             number="06"
-            label="Qual tarefa consome mais tempo e ainda é feita manualmente?"
+            label="Qual tarefa consome mais tempo no seu dia e ainda é feita manualmente?"
             hint="Ex: copiar dados, preencher planilhas, gerar relatórios, responder mensagens repetitivas."
           >
             <TextArea
@@ -375,15 +387,15 @@ export default function Home() {
             <TextArea
               value={form.automatizar}
               onChange={(v) => setForm({ ...form, automatizar: v })}
-              placeholder="Descreva o que automatizaria..."
+              placeholder="Descreva o que você gostaria de automatizar..."
             />
           </Question>
 
           {/* Info outro setor */}
           <Question
             number="09"
-            label="Tem alguma informação de outro setor que você precisa e tem dificuldade de acessar?"
-            hint={`Ex: "Preciso saber quantos contratos o financeiro fechou, mas as informações ficam dispersas."`}
+            label="Tem alguma informação de outro setor que você precisa com frequência e tem dificuldade de acessar?"
+            hint='Ex: "Preciso saber quantos contratos o financeiro fechou, mas as informações ficam em lugares diferentes."'
             required={false}
           >
             <TextArea
@@ -395,21 +407,23 @@ export default function Home() {
           </Question>
 
           {/* Submit */}
-          <div className="pt-8 pb-4">
+          <div className="pt-6 pb-4">
             {error && (
-              <p className="text-xs text-red-500 tracking-wide mb-6">{error}</p>
+              <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-md px-4 py-3 mb-5">
+                {error}
+              </p>
             )}
             <button
               type="submit"
               disabled={loading}
-              className="border border-gray-900 px-8 py-3 text-[11px] tracking-[0.2em] uppercase font-medium text-gray-900 hover:bg-gray-900 hover:text-white transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+              className="w-full bg-gray-900 hover:bg-[#A0845C] text-white font-semibold text-base py-4 rounded-lg transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
             >
               {loading ? "Enviando..." : "Enviar respostas →"}
             </button>
           </div>
         </form>
 
-        <p className="text-[10px] tracking-[0.2em] uppercase text-gray-300 mt-16 pb-8">
+        <p className="text-xs text-gray-400 text-center mt-10 pb-8">
           Escola Técnica Stela · Diagnóstico de IA 2026
         </p>
       </div>
