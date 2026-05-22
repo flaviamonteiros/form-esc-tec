@@ -1,31 +1,20 @@
 import { NextRequest, NextResponse } from "next/server";
-import { writeFile, readFile, mkdir } from "fs/promises";
-import path from "path";
 
-const DATA_DIR = path.join(process.cwd(), "data");
-const DATA_FILE = path.join(DATA_DIR, "respostas.json");
+const SHEETS_WEBHOOK = "https://script.google.com/macros/s/AKfycbxowb4xU65OWiGL4I1q76OIwoZ1uzx8jZZ3JzNwk5ZPx6MZrTQjJ2ylSMZ58cEMlzFs/exec";
 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
 
-    const entry = {
-      ...body,
-      timestamp: new Date().toISOString(),
-    };
+    const res = await fetch(SHEETS_WEBHOOK, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
 
-    await mkdir(DATA_DIR, { recursive: true });
-
-    let existing: unknown[] = [];
-    try {
-      const raw = await readFile(DATA_FILE, "utf-8");
-      existing = JSON.parse(raw);
-    } catch {
-      existing = [];
+    if (!res.ok) {
+      throw new Error(`Sheets webhook returned ${res.status}`);
     }
-
-    existing.push(entry);
-    await writeFile(DATA_FILE, JSON.stringify(existing, null, 2), "utf-8");
 
     return NextResponse.json({ ok: true });
   } catch (err) {
