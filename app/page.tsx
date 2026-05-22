@@ -192,7 +192,8 @@ export default function Home() {
       !form.rotina ||
       !form.tarefaManual ||
       !form.sistemas ||
-      !form.automatizar
+      !form.automatizar ||
+      !form.infoOutroSetor
     ) {
       setError("Preencha todos os campos obrigatórios antes de continuar.");
       return;
@@ -396,7 +397,6 @@ export default function Home() {
             number="09"
             label="Tem alguma informação de outro setor que você precisa com frequência e tem dificuldade de acessar?"
             hint='Ex: "Preciso saber quantos contratos o financeiro fechou, mas as informações ficam em lugares diferentes."'
-            required={false}
           >
             <TextArea
               value={form.infoOutroSetor}
