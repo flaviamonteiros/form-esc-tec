@@ -41,6 +41,119 @@ const initialForm: FormData = {
   infoOutroSetor: "",
 };
 
+function SectionLabel({ children }: { children: React.ReactNode }) {
+  return (
+    <p className="text-[10px] tracking-[0.25em] uppercase text-[#C9A96E] font-medium mb-6">
+      {children}
+    </p>
+  );
+}
+
+function Question({
+  number,
+  label,
+  hint,
+  required = true,
+  children,
+}: {
+  number: string;
+  label: string;
+  hint?: string;
+  required?: boolean;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="border-t border-gray-100 pt-8 pb-2">
+      <div className="flex gap-4 mb-4">
+        <span className="text-[11px] tracking-[0.15em] text-[#C9A96E] font-medium mt-0.5 shrink-0">{number}</span>
+        <div>
+          <p className="text-sm font-medium text-gray-900 leading-snug">
+            {label}
+            {!required && <span className="text-gray-400 font-normal ml-1">(opcional)</span>}
+          </p>
+          {hint && <p className="text-xs text-gray-400 mt-1 leading-relaxed">{hint}</p>}
+        </div>
+      </div>
+      <div className="pl-8">{children}</div>
+    </div>
+  );
+}
+
+function OptionButton({
+  selected,
+  onClick,
+  children,
+  fullWidth = false,
+}: {
+  selected: boolean;
+  onClick: () => void;
+  children: React.ReactNode;
+  fullWidth?: boolean;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={`text-left px-4 py-3 text-sm transition-all border ${
+        fullWidth ? "w-full" : ""
+      } ${
+        selected
+          ? "border-[#C9A96E] text-gray-900 bg-[#fdf8f0]"
+          : "border-gray-200 text-gray-500 hover:border-gray-400 hover:text-gray-700"
+      }`}
+    >
+      <span
+        className={`inline-block w-3 h-3 border mr-3 shrink-0 align-middle transition-colors ${
+          selected ? "border-[#C9A96E] bg-[#C9A96E]" : "border-gray-300"
+        }`}
+      />
+      {children}
+    </button>
+  );
+}
+
+function TextInput({
+  value,
+  onChange,
+  placeholder,
+}: {
+  value: string;
+  onChange: (v: string) => void;
+  placeholder?: string;
+}) {
+  return (
+    <input
+      type="text"
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+      placeholder={placeholder}
+      className="w-full border-b border-gray-300 focus:border-[#C9A96E] px-0 py-2 text-sm text-gray-900 placeholder-gray-300 outline-none transition-colors bg-transparent"
+    />
+  );
+}
+
+function TextArea({
+  value,
+  onChange,
+  placeholder,
+  rows = 3,
+}: {
+  value: string;
+  onChange: (v: string) => void;
+  placeholder?: string;
+  rows?: number;
+}) {
+  return (
+    <textarea
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+      placeholder={placeholder}
+      rows={rows}
+      className="w-full border-b border-gray-300 focus:border-[#C9A96E] px-0 py-2 text-sm text-gray-900 placeholder-gray-300 outline-none transition-colors bg-transparent resize-none"
+    />
+  );
+}
+
 export default function Home() {
   const [form, setForm] = useState<FormData>(initialForm);
   const [submitted, setSubmitted] = useState(false);
@@ -72,7 +185,7 @@ export default function Home() {
       !form.sistemas ||
       !form.automatizar
     ) {
-      setError("Por favor, preencha todos os campos obrigatórios.");
+      setError("Preencha todos os campos obrigatórios antes de continuar.");
       return;
     }
 
@@ -102,222 +215,203 @@ export default function Home() {
 
   if (submitted) {
     return (
-      <main className="min-h-screen bg-gray-50 flex items-center justify-center p-6">
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-10 max-w-md w-full text-center">
-          <div className="text-5xl mb-4">✅</div>
-          <h2 className="text-2xl font-bold text-gray-800 mb-2">Obrigada, {form.nome.split(" ")[0]}!</h2>
-          <p className="text-gray-500">Suas respostas foram registradas. Em breve entraremos em contato com o próximo passo.</p>
+      <main className="min-h-screen bg-white flex items-center justify-center px-6">
+        <div className="max-w-md w-full">
+          <SectionLabel>Diagnóstico · Escola Técnica Stela</SectionLabel>
+          <h2 className="text-3xl font-light text-gray-900 mb-4 leading-tight">
+            Obrigada,<br />
+            <span className="text-[#C9A96E]">{form.nome.split(" ")[0]}.</span>
+          </h2>
+          <p className="text-sm text-gray-400 leading-relaxed">
+            Suas respostas foram registradas. Em breve entraremos em contato com o próximo passo.
+          </p>
         </div>
       </main>
     );
   }
 
   return (
-    <main className="min-h-screen bg-gray-50 py-12 px-4">
-      <div className="max-w-2xl mx-auto">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Diagnóstico de IA</h1>
-          <p className="text-gray-500 mt-2">
-            Este formulário faz parte do nosso programa de uso de Inteligência Artificial. Leva menos de 5 minutos e vai nos ajudar a montar um programa personalizado para a sua área.
-          </p>
-        </div>
+    <main className="min-h-screen bg-white">
+      {/* Header */}
+      <header className="border-b border-gray-100 px-8 py-5">
+        <span className="text-[11px] tracking-[0.3em] uppercase text-gray-900 font-medium">Idens</span>
+      </header>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+      <div className="max-w-2xl mx-auto px-6 py-16">
+        {/* Hero */}
+        <SectionLabel>Pré-diagnóstico · Escola Técnica Stela</SectionLabel>
+        <h1 className="text-4xl font-light text-gray-900 leading-tight mb-4">
+          O que você<br />
+          <span className="text-[#C9A96E]">precisa resolver.</span>
+        </h1>
+        <p className="text-sm text-gray-400 leading-relaxed mb-16 max-w-sm">
+          Leva menos de 5 minutos. Suas respostas vão nos ajudar a montar um programa personalizado para a sua área.
+        </p>
+
+        <form onSubmit={handleSubmit} className="space-y-0">
 
           {/* Nome */}
-          <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-6">
-            <label className="block text-sm font-semibold text-gray-700 mb-2">
-              Nome completo <span className="text-red-500">*</span>
-            </label>
-            <input
-              type="text"
+          <Question number="01" label="Qual é o seu nome completo?">
+            <TextInput
               value={form.nome}
-              onChange={(e) => setForm({ ...form, nome: e.target.value })}
+              onChange={(v) => setForm({ ...form, nome: v })}
               placeholder="Seu nome"
-              className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-800"
             />
-          </div>
+          </Question>
 
           {/* Área */}
-          <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-6">
-            <label className="block text-sm font-semibold text-gray-700 mb-3">
-              Em qual área você trabalha? <span className="text-red-500">*</span>
-            </label>
+          <Question number="02" label="Em qual área você trabalha?">
             <div className="grid grid-cols-2 gap-2">
               {areas.map((a) => (
-                <button
+                <OptionButton
                   key={a}
-                  type="button"
+                  selected={form.area === a}
                   onClick={() => setForm({ ...form, area: a, areaOutro: "" })}
-                  className={`text-left px-4 py-2.5 rounded-lg border text-sm transition-all ${
-                    form.area === a
-                      ? "bg-gray-900 text-white border-gray-900 font-medium"
-                      : "border-gray-200 text-gray-600 hover:border-gray-400"
-                  }`}
                 >
                   {a}
-                </button>
+                </OptionButton>
               ))}
             </div>
             {form.area === "Outro" && (
-              <input
-                type="text"
-                autoFocus
-                value={form.areaOutro}
-                onChange={(e) => setForm({ ...form, areaOutro: e.target.value })}
-                placeholder="Qual área?"
-                className="mt-3 w-full border border-gray-300 rounded-lg px-4 py-2.5 text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-800"
-              />
+              <div className="mt-4">
+                <TextInput
+                  value={form.areaOutro}
+                  onChange={(v) => setForm({ ...form, areaOutro: v })}
+                  placeholder="Qual área?"
+                />
+              </div>
             )}
-          </div>
+          </Question>
 
-          {/* Nível IA */}
-          <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-6">
-            <label className="block text-sm font-semibold text-gray-700 mb-3">
-              Como você descreveria seu uso atual de IA? <span className="text-red-500">*</span>
-            </label>
+          {/* Nível */}
+          <Question number="03" label="Como você descreveria seu uso atual de IA?">
             <div className="space-y-2">
               {niveis.map((n) => (
-                <button
+                <OptionButton
                   key={n}
-                  type="button"
+                  selected={form.nivel === n}
                   onClick={() => setForm({ ...form, nivel: n })}
-                  className={`w-full text-left px-4 py-2.5 rounded-lg border text-sm transition-all ${
-                    form.nivel === n
-                      ? "bg-gray-900 text-white border-gray-900 font-medium"
-                      : "border-gray-200 text-gray-600 hover:border-gray-400"
-                  }`}
+                  fullWidth
                 >
                   {n}
-                </button>
+                </OptionButton>
               ))}
             </div>
-          </div>
+          </Question>
 
           {/* Ferramentas */}
-          <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-6">
-            <label className="block text-sm font-semibold text-gray-700 mb-3">
-              Quais ferramentas de IA você já usou?{" "}
-              <span className="text-gray-400 font-normal">(pode marcar mais de uma)</span>{" "}
-              <span className="text-red-500">*</span>
-            </label>
+          <Question
+            number="04"
+            label="Quais ferramentas de IA você já usou?"
+            hint="Pode marcar mais de uma."
+          >
             <div className="grid grid-cols-2 gap-2">
               {ferramentas.map((f) => (
-                <button
+                <OptionButton
                   key={f}
-                  type="button"
+                  selected={form.ferramentasUsadas.includes(f)}
                   onClick={() => toggleFerramenta(f)}
-                  className={`text-left px-4 py-2.5 rounded-lg border text-sm transition-all ${
-                    form.ferramentasUsadas.includes(f)
-                      ? "bg-gray-900 text-white border-gray-900 font-medium"
-                      : "border-gray-200 text-gray-600 hover:border-gray-400"
-                  }`}
                 >
                   {f}
-                </button>
+                </OptionButton>
               ))}
             </div>
             {form.ferramentasUsadas.includes("Outra") && (
-              <input
-                type="text"
-                autoFocus
-                value={form.ferramentaOutra}
-                onChange={(e) => setForm({ ...form, ferramentaOutra: e.target.value })}
-                placeholder="Qual ferramenta?"
-                className="mt-3 w-full border border-gray-300 rounded-lg px-4 py-2.5 text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-800"
-              />
+              <div className="mt-4">
+                <TextInput
+                  value={form.ferramentaOutra}
+                  onChange={(v) => setForm({ ...form, ferramentaOutra: v })}
+                  placeholder="Qual ferramenta?"
+                />
+              </div>
             )}
-          </div>
+          </Question>
 
           {/* Rotina */}
-          <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-6">
-            <label className="block text-sm font-semibold text-gray-700 mb-1">
-              Descreva brevemente sua rotina principal no trabalho <span className="text-red-500">*</span>
-            </label>
-            <p className="text-xs text-gray-400 mb-3">Ex: &ldquo;Gero relatórios de matrícula toda segunda, atendo leads pelo WhatsApp e atualizo planilhas de metas.&rdquo;</p>
-            <textarea
+          <Question
+            number="05"
+            label="Descreva brevemente sua rotina principal no trabalho."
+            hint={`Ex: "Gero relatórios de matrícula toda segunda, atendo leads pelo WhatsApp e atualizo planilhas de metas."`}
+          >
+            <TextArea
               value={form.rotina}
-              onChange={(e) => setForm({ ...form, rotina: e.target.value })}
-              rows={3}
+              onChange={(v) => setForm({ ...form, rotina: v })}
               placeholder="Descreva sua rotina..."
-              className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-800 resize-none"
             />
-          </div>
+          </Question>
 
           {/* Tarefa manual */}
-          <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-6">
-            <label className="block text-sm font-semibold text-gray-700 mb-1">
-              Qual tarefa consome mais tempo e ainda é feita manualmente? <span className="text-red-500">*</span>
-            </label>
-            <p className="text-xs text-gray-400 mb-3">Ex: copiar dados, preencher planilhas, gerar relatórios, responder mensagens repetitivas.</p>
-            <textarea
+          <Question
+            number="06"
+            label="Qual tarefa consome mais tempo e ainda é feita manualmente?"
+            hint="Ex: copiar dados, preencher planilhas, gerar relatórios, responder mensagens repetitivas."
+          >
+            <TextArea
               value={form.tarefaManual}
-              onChange={(e) => setForm({ ...form, tarefaManual: e.target.value })}
-              rows={3}
+              onChange={(v) => setForm({ ...form, tarefaManual: v })}
               placeholder="Descreva a tarefa..."
-              className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-800 resize-none"
             />
-          </div>
+          </Question>
 
           {/* Sistemas */}
-          <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-6">
-            <label className="block text-sm font-semibold text-gray-700 mb-1">
-              Quais sistemas e ferramentas você usa no trabalho? <span className="text-red-500">*</span>
-            </label>
-            <p className="text-xs text-gray-400 mb-3">Ex: RD Station, Google Ads, planilha Excel, sistema acadêmico, WhatsApp, etc.</p>
-            <textarea
+          <Question
+            number="07"
+            label="Quais sistemas e ferramentas você usa no trabalho?"
+            hint="Ex: RD Station, Google Ads, planilha Excel, sistema acadêmico, WhatsApp, etc."
+          >
+            <TextArea
               value={form.sistemas}
-              onChange={(e) => setForm({ ...form, sistemas: e.target.value })}
-              rows={2}
+              onChange={(v) => setForm({ ...form, sistemas: v })}
               placeholder="Liste os sistemas..."
-              className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-800 resize-none"
+              rows={2}
             />
-          </div>
+          </Question>
 
           {/* Automatizar */}
-          <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-6">
-            <label className="block text-sm font-semibold text-gray-700 mb-1">
-              Se você pudesse automatizar UMA coisa hoje, o que seria? <span className="text-red-500">*</span>
-            </label>
-            <textarea
+          <Question
+            number="08"
+            label="Se você pudesse automatizar UMA coisa hoje, o que seria?"
+          >
+            <TextArea
               value={form.automatizar}
-              onChange={(e) => setForm({ ...form, automatizar: e.target.value })}
-              rows={3}
+              onChange={(v) => setForm({ ...form, automatizar: v })}
               placeholder="Descreva o que automatizaria..."
-              className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-800 resize-none"
             />
-          </div>
+          </Question>
 
           {/* Info outro setor */}
-          <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-6">
-            <label className="block text-sm font-semibold text-gray-700 mb-1">
-              Tem alguma informação de outro setor que você precisa e tem dificuldade de acessar?{" "}
-              <span className="text-gray-400 font-normal">(opcional)</span>
-            </label>
-            <p className="text-xs text-gray-400 mb-3">Ex: &ldquo;Preciso saber quantos contratos o financeiro fechou, mas as informações ficam dispersas.&rdquo;</p>
-            <textarea
-              value={form.infoOutroSetor}
-              onChange={(e) => setForm({ ...form, infoOutroSetor: e.target.value })}
-              rows={2}
-              placeholder="Descreva se houver..."
-              className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-800 resize-none"
-            />
-          </div>
-
-          {error && (
-            <p className="text-red-500 text-sm bg-red-50 border border-red-100 rounded-lg px-4 py-3">{error}</p>
-          )}
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-gray-900 hover:bg-gray-700 text-white font-semibold py-3.5 rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+          <Question
+            number="09"
+            label="Tem alguma informação de outro setor que você precisa e tem dificuldade de acessar?"
+            hint={`Ex: "Preciso saber quantos contratos o financeiro fechou, mas as informações ficam dispersas."`}
+            required={false}
           >
-            {loading ? "Enviando..." : "Enviar respostas →"}
-          </button>
+            <TextArea
+              value={form.infoOutroSetor}
+              onChange={(v) => setForm({ ...form, infoOutroSetor: v })}
+              placeholder="Descreva se houver..."
+              rows={2}
+            />
+          </Question>
+
+          {/* Submit */}
+          <div className="border-t border-gray-100 pt-10 pb-4">
+            {error && (
+              <p className="text-xs text-red-500 tracking-wide mb-6">{error}</p>
+            )}
+            <button
+              type="submit"
+              disabled={loading}
+              className="border border-gray-900 px-8 py-3 text-[11px] tracking-[0.2em] uppercase font-medium text-gray-900 hover:bg-gray-900 hover:text-white transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+            >
+              {loading ? "Enviando..." : "Enviar respostas →"}
+            </button>
+          </div>
         </form>
 
-        <p className="text-center text-xs text-gray-400 mt-8 pb-8">Escola Técnica Stela · Diagnóstico de IA 2026</p>
+        <p className="text-[10px] tracking-[0.2em] uppercase text-gray-300 mt-16 pb-8">
+          Escola Técnica Stela · Diagnóstico de IA 2026
+        </p>
       </div>
     </main>
   );
