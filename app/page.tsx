@@ -63,7 +63,7 @@ function Question({
   children: React.ReactNode;
 }) {
   return (
-    <div className="border-t border-gray-100 pt-8 pb-2">
+    <div className="bg-white px-6 py-6 mb-2">
       <div className="flex gap-4 mb-4">
         <span className="text-[11px] tracking-[0.15em] text-[#C9A96E] font-medium mt-0.5 shrink-0">{number}</span>
         <div>
@@ -215,7 +215,7 @@ export default function Home() {
 
   if (submitted) {
     return (
-      <main className="min-h-screen bg-white flex items-center justify-center px-6">
+      <main className="min-h-screen bg-[#F5F2EE] flex items-center justify-center px-6">
         <div className="max-w-md w-full">
           <SectionLabel>Diagnóstico · Escola Técnica Stela</SectionLabel>
           <h2 className="text-3xl font-light text-gray-900 mb-4 leading-tight">
@@ -231,9 +231,9 @@ export default function Home() {
   }
 
   return (
-    <main className="min-h-screen bg-white">
+    <main className="min-h-screen bg-[#F5F2EE]">
       {/* Header */}
-      <header className="border-b border-gray-100 px-8 py-5">
+      <header className="border-b border-[#E8E3DB] px-8 py-5">
         <span className="text-[11px] tracking-[0.3em] uppercase text-gray-900 font-medium">Idens</span>
       </header>
 
@@ -395,7 +395,7 @@ export default function Home() {
           </Question>
 
           {/* Submit */}
-          <div className="border-t border-gray-100 pt-10 pb-4">
+          <div className="pt-8 pb-4">
             {error && (
               <p className="text-xs text-red-500 tracking-wide mb-6">{error}</p>
             )}
