@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Diagnóstico de IA — Escola Técnica Stela",
+  title: "Diagnóstico de IA — Escola Técnica",
   description: "Formulário de pré-diagnóstico para o programa de uso de Inteligência Artificial.",
 };
 

@@ -248,7 +248,7 @@ export default function Home() {
       <div className="max-w-2xl mx-auto px-4 py-12">
         {/* Hero */}
         <div className="mb-10">
-          <SectionLabel>Pré-diagnóstico · Escola Técnica Stela</SectionLabel>
+          <SectionLabel>Pré-diagnóstico · Escola Técnica</SectionLabel>
           <h1 className="text-3xl font-bold text-gray-900 leading-tight mb-3">
             O que você precisa<br />
             <span className="text-[#A0845C]">resolver.</span>
@@ -424,7 +424,7 @@ export default function Home() {
         </form>
 
         <p className="text-xs text-gray-400 text-center mt-10 pb-8">
-          Escola Técnica Stela · Diagnóstico de IA 2026
+          Escola Técnica · Diagnóstico de IA 2026
         </p>
       </div>
     </main>
