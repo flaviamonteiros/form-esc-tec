@@ -11,13 +11,15 @@ const niveis = [
   "Uso regularmente no meu trabalho",
 ];
 
-const ferramentas = ["ChatGPT", "G4S", "Gemini (Google)", "Copilot (Microsoft)", "Outra", "Nenhuma"];
+const ferramentas = ["ChatGPT", "Claude", "Gemini (Google)", "Copilot (Microsoft)", "Outra", "Nenhuma"];
 
 type FormData = {
   nome: string;
   area: string;
+  areaOutro: string;
   nivel: string;
   ferramentasUsadas: string[];
+  ferramentaOutra: string;
   rotina: string;
   tarefaManual: string;
   sistemas: string;
@@ -28,8 +30,10 @@ type FormData = {
 const initialForm: FormData = {
   nome: "",
   area: "",
+  areaOutro: "",
   nivel: "",
   ferramentasUsadas: [],
+  ferramentaOutra: "",
   rotina: "",
   tarefaManual: "",
   sistemas: "",
@@ -56,17 +60,36 @@ export default function Home() {
     e.preventDefault();
     setError("");
 
-    if (!form.nome || !form.area || !form.nivel || form.ferramentasUsadas.length === 0 || !form.rotina || !form.tarefaManual || !form.sistemas || !form.automatizar) {
+    if (
+      !form.nome ||
+      !form.area ||
+      (form.area === "Outro" && !form.areaOutro) ||
+      !form.nivel ||
+      form.ferramentasUsadas.length === 0 ||
+      (form.ferramentasUsadas.includes("Outra") && !form.ferramentaOutra) ||
+      !form.rotina ||
+      !form.tarefaManual ||
+      !form.sistemas ||
+      !form.automatizar
+    ) {
       setError("Por favor, preencha todos os campos obrigatórios.");
       return;
     }
 
     setLoading(true);
     try {
+      const payload = {
+        ...form,
+        area: form.area === "Outro" ? `Outro: ${form.areaOutro}` : form.area,
+        ferramentasUsadas: form.ferramentasUsadas.map((f) =>
+          f === "Outra" ? `Outra: ${form.ferramentaOutra}` : f
+        ),
+      };
+
       const res = await fetch("/api/submit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify(payload),
       });
       if (!res.ok) throw new Error("Erro ao enviar");
       setSubmitted(true);
@@ -125,7 +148,7 @@ export default function Home() {
                 <button
                   key={a}
                   type="button"
-                  onClick={() => setForm({ ...form, area: a })}
+                  onClick={() => setForm({ ...form, area: a, areaOutro: "" })}
                   className={`text-left px-4 py-2.5 rounded-lg border text-sm transition-all ${
                     form.area === a
                       ? "bg-gray-900 text-white border-gray-900 font-medium"
@@ -136,6 +159,16 @@ export default function Home() {
                 </button>
               ))}
             </div>
+            {form.area === "Outro" && (
+              <input
+                type="text"
+                autoFocus
+                value={form.areaOutro}
+                onChange={(e) => setForm({ ...form, areaOutro: e.target.value })}
+                placeholder="Qual área?"
+                className="mt-3 w-full border border-gray-300 rounded-lg px-4 py-2.5 text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-800"
+              />
+            )}
           </div>
 
           {/* Nível IA */}
@@ -164,7 +197,9 @@ export default function Home() {
           {/* Ferramentas */}
           <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-6">
             <label className="block text-sm font-semibold text-gray-700 mb-3">
-              Quais ferramentas de IA você já usou? <span className="text-gray-400 font-normal">(pode marcar mais de uma)</span> <span className="text-red-500">*</span>
+              Quais ferramentas de IA você já usou?{" "}
+              <span className="text-gray-400 font-normal">(pode marcar mais de uma)</span>{" "}
+              <span className="text-red-500">*</span>
             </label>
             <div className="grid grid-cols-2 gap-2">
               {ferramentas.map((f) => (
@@ -182,6 +217,16 @@ export default function Home() {
                 </button>
               ))}
             </div>
+            {form.ferramentasUsadas.includes("Outra") && (
+              <input
+                type="text"
+                autoFocus
+                value={form.ferramentaOutra}
+                onChange={(e) => setForm({ ...form, ferramentaOutra: e.target.value })}
+                placeholder="Qual ferramenta?"
+                className="mt-3 w-full border border-gray-300 rounded-lg px-4 py-2.5 text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-800"
+              />
+            )}
           </div>
 
           {/* Rotina */}
